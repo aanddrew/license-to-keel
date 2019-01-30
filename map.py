@@ -13,10 +13,14 @@ class Map:
 
 		self.blocks = blocksIn
 
+	def size_in_pixels(self):
+		return self.textures[0].get_width()
+
 	def draw(self, screen, pos):
+		pixels = self.size_in_pixels()
 		for r in range(0, self.size):
 			for c in range(0,self.size):
-				loc = (pos[0] + (25*c), pos[1] + (25*r))
+				loc = (pos[0] + (pixels*c), pos[1] + (pixels*r))
 				
 				if self.blocks[r][c] != 0:
 					screen.blit(self.textures[self.blocks[r][c]-1], loc)
@@ -56,16 +60,27 @@ def generate_blocks(size):
 	blocks[size-1][0] = 0
 	blocks[size-1][size-1] = 0
 
+	#creating water on the sides
+	blocks[0][size/2] = 0
+	blocks[size-1][size/2] = 0
+	blocks[size/2][0] = 0
+	blocks[size/2][size-1]
+
 	#creating land in the center
 	blocks[size/2][size/2] = 1
 
+	#sometimes this loop will get stuck forever....
+	#don't know how to fix it. 
 	done = False
 	while not done:
+		neg_count = 0
 		done = True
 		for x in range(0, size):
 			for y in range(0,size):
+				# print("%x,%y").format(x,y)
 				if blocks[x][y] == -1:
 					done = False
+					neg_count += 1
 				elif blocks[x][y] == 0:
 					rand = random.randint(0,4)
 					try:
@@ -101,25 +116,25 @@ def generate_blocks(size):
 					except:
 						pass
 
-		tol = 2
-		#these loops make the lands that are within 'tol' blocks
-		#	of water turn to sand. kinda like minecraft
-		ran = range(-1*tol,tol)
-		#Looping over each element of blocks
-		for x in range(0, size):
-			for y in range(0,size):
-				#if the blocks is land
-				if blocks[x][y] == 1:
-					#compare the blocks around it in the range ran
-					for dx in ran:
-						for dy in ran:
-							#try to check a block, but it might be out of index...
-							try:
-								if blocks[x+dx][y+dy] == 0:
-									blocks[x][y] = 2
-							except:
-								pass
-
+		#end while loop right here
+	sand_tol = 2
+	#these loops make the lands that are within 'tol' blocks
+	#	of water turn to sand. kinda like minecraft
+	sand_ran = range(-1*sand_tol,sand_tol)
+	#Looping over each element of blocks
+	for x in range(0, size):
+		for y in range(0,size):
+			#if the blocks is land
+			if blocks[x][y] == 1:
+				#compare the blocks around it in the range ran
+				for dx in sand_ran:
+					for dy in sand_ran:
+						#try to check a block, but it might be out of bounds...
+						try:
+							if blocks[x+dx][y+dy] == 0:
+								blocks[x][y] = 2
+						except:
+							pass
 	return blocks
 
 

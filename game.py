@@ -21,7 +21,7 @@ target_x = 300
 target_y = 500
 
 p = player.Player()
-m = map.generate_map(40)
+m = map.generate_map(50)
 
 # map.load_map('maps/test.map')
 # map.generate_blocks(20)
