@@ -39,7 +39,6 @@ def generate_blocks(size):
 		blocks.append([])
 		for j in range(0,size):
 			blocks[i].append(-1)
-	print(blocks[size-1][size-1])
 	# #creating waters
 	# for i in range(0,1):
 	# 	randx = random.randint(0,size-1)
@@ -50,13 +49,15 @@ def generate_blocks(size):
 	# 	randx = random.randint(0,size-1)
 	# 	randy = random.randint(0,size-1)
 	# 	blocks[randx][randy] = 1
+	
+	#creating water in the corners
 	blocks[0][0] = 0
 	blocks[0][size-1] = 0
 	blocks[size-1][0] = 0
 	blocks[size-1][size-1] = 0
-	blocks[size/2][size/2] = 1
 
-	print("1")
+	#creating land in the center
+	blocks[size/2][size/2] = 1
 
 	done = False
 	while not done:

@@ -26,6 +26,7 @@ m = map.generate_map(40)
 # map.load_map('maps/test.map')
 # map.generate_blocks(20)
 
+
 while not done:
 	display.fill(water_blue)
 	for event in pygame.event.get():
@@ -34,10 +35,14 @@ while not done:
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			target_x = pygame.mouse.get_pos()[0]
 			target_y = pygame.mouse.get_pos()[1]
-		
+		if event.type == pygame.KEYDOWN:
+			p.key_down(event)
+		if event.type == pygame.KEYUP:
+			p.key_up(event)
+	p.update()
 
 	
-	m.draw(display, (0,0))
+	m.draw(display, (0-p.x,0-p.y))
 	p.draw(display, center)
 
 	pygame.display.update()
