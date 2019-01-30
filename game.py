@@ -1,12 +1,15 @@
 import pygame
-import ship
+# import ship
 import spritesheet
 import boat
+import player
+import map
 
 display_width = 800
 display_height = 600
 dimensions = (display_width, display_height)
 display = pygame.display.set_mode(dimensions)
+center = (display_width/2, display_height/2)
 
 water_blue = (173, 216, 230)
 
@@ -14,10 +17,14 @@ clock = pygame.time.Clock()
 
 done = False
 
-b = boat.Boat(100, 100);
-
 target_x = 300
 target_y = 500
+
+p = player.Player()
+m = map.generate_map(40)
+
+# map.load_map('maps/test.map')
+# map.generate_blocks(20)
 
 while not done:
 	display.fill(water_blue)
@@ -27,36 +34,12 @@ while not done:
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			target_x = pygame.mouse.get_pos()[0]
 			target_y = pygame.mouse.get_pos()[1]
+		
 
-	if b.x < target_x:
-		b.x += 1
-		if b.y < target_y:
-			b.y += 1
-			b.set_orientation(7)
-		elif b.y > target_y:
-			b.y -= 1
-			b.set_orientation(1)
-		else:
-			b.set_orientation(0)
-	elif b.x > target_x:
-		b.x -= 1
-		if b.y < target_y:
-			b.y += 1
-			b.set_orientation(5)
-		elif b.y > target_y:
-			b.y -= 1
-			b.set_orientation(3)
-		else:
-			b.set_orientation(4)
-	else:
-		if b.y < target_y:
-			b.y += 1
-			b.set_orientation(6)
-		elif b.y > target_y:
-			b.y -= 1
-			b.set_orientation(2)
+	
+	m.draw(display, (0,0))
+	p.draw(display, center)
 
-	b.draw(display)
 	pygame.display.update()
 	clock.tick(60)
 
