@@ -13,61 +13,70 @@ class Map:
 
 		self.blocks = blocksIn
 
-	def size_in_pixels(self):
+	def pixels_per_block(self):
 		return self.textures[0].get_width()
 
 	def draw(self, screen, pos):
-		pixels = self.size_in_pixels()
+		pixels = self.pixels_per_block()
 		for r in range(0, self.size):
 			for c in range(0,self.size):
 				loc = (pos[0] + (pixels*c), pos[1] + (pixels*r))
 				
-				if self.blocks[r][c] != 0:
-					screen.blit(self.textures[self.blocks[r][c]-1], loc)
+				if self.blocks[c][r] != 0:
+					screen.blit(self.textures[self.blocks[c][r]-1], loc)
 
-def generate_map(size):
+def generate_map(size, lands):
 	# blocks = []
 	# for i in range(0, size):
 	# 	blocks.append([])
 	# 	for j in range(0, size):
 	# 		r = random.randint(0,2)
 	# 		blocks[i].append(r)
-	blocks = generate_blocks(size)
+	blocks = generate_blocks(size, lands)
 	m = Map(size, blocks)
 
 	return m
 
-def generate_blocks(size):
+def generate_blocks(size, lands):
 	blocks = []
 	for i in range(0, size):
 		blocks.append([])
 		for j in range(0,size):
 			blocks[i].append(-1)
-	# #creating waters
-	# for i in range(0,1):
-	# 	randx = random.randint(0,size-1)
-	# 	randy = random.randint(0,size-1)
-	# 	blocks[randx][randy] = 0
-	# #creating lands
-	# for i in range(0,1):
-	# 	randx = random.randint(0,size-1)
-	# 	randy = random.randint(0,size-1)
-	# 	blocks[randx][randy] = 1
-	
+
 	#creating water in the corners
-	blocks[0][0] = 0
-	blocks[0][size-1] = 0
-	blocks[size-1][0] = 0
-	blocks[size-1][size-1] = 0
+	middle = size/2
+	end = size-1
 
-	#creating water on the sides
-	blocks[0][size/2] = 0
-	blocks[size-1][size/2] = 0
-	blocks[size/2][0] = 0
-	blocks[size/2][size-1]
+	blocks[0][0] = lands[0]
+	blocks[middle][0] = lands[1]
+	blocks[end][0] = lands[2]
 
-	#creating land in the center
-	blocks[size/2][size/2] = 1
+	blocks[0][middle] = lands[3]
+	blocks[middle][middle] = lands[4]
+	blocks[end][middle] = lands[5]
+
+	blocks[0][end] = lands[6]
+	blocks[middle][end] = lands[7]
+	blocks[end][end] = lands[8]
+
+	square = size/2
+	if lands[0] == 1:
+		for i in range(0, middle/2):
+			blocks[0][0+i] = 1
+			blocks[0+i][0] = 1
+	if lands[2] == 1:
+		for i in range(0, middle/2):
+			blocks[end][0+i] = 1
+			blocks[end-i][0] = 1
+	if lands[6] == 1:
+		for i in range(0, middle/2):
+			blocks[0][end-i] = 1
+			blocks[0+i][end] = 1
+	if lands[8] == 1:
+		for i in range(0, middle/2):
+			blocks[end][end-i] = 1
+			blocks[end-i][end] = 1
 
 	#sometimes this loop will get stuck forever....
 	#don't know how to fix it. 
