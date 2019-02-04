@@ -135,6 +135,7 @@ class Player:
 			if not self.fishing:
 				self.fishing = True
 				self.catch_timer = 0
+			#if the player is fishing. game time!
 			else:
 				self.fishing = False
 				self.catch_timer = 0

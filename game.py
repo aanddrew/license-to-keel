@@ -5,6 +5,7 @@ import boat
 import player
 import animations
 import map
+import island
 
 pygame.font.init()
 
@@ -25,10 +26,13 @@ target_y = 500
 
 map_size = 50
 
+i = island.Island(3)
+
 p = player.Player()
-m = map.generate_map(map_size, [0, 1, 1,
-								1, 0, 1,
-								1, 1, 1])
+# m = map.generate_map(map_size, [0, 1, 1,
+# 								1, 0, 1,
+# 								1, 1, 1])
+m = i.maps[0][0]
 
 p.set_map(m)
 p.forbidden_blocks = [0]

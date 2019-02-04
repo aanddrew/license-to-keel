@@ -1,6 +1,7 @@
 import pygame
 import player
 import random
+import math
 
 pygame.font.init()
 
@@ -30,24 +31,41 @@ def draw_fishing(p, screen, start_pos):
 	dx = 0
 	dy = 0
 
-	rand = random.randint(-1*p.catch_timer, p.catch_timer)
+	wait_frames = 240 + random.randint(0,120)
+	max_range = 12
+	rand = 0
+	# if (p.catch_timer > wait_frames):
+	# 	rand = random.randint(-1*(p.catch_timer-wait_frames), \
+	# 						  (p.catch_timer-wait_frames))
+	# rand = (rand% max_range) - (max_range/2)
+	rand = random.randint(-1*max_range, max_range)
+
+	wobble_speed =15
+	wobble_amplitude = 5
 
 	if p.fishing_direction == 0:
 		start_y += player.RADIUS/2
 		dx = player.RADIUS*3
-		dy = rand
+		if p.catch_timer > wait_frames:
+			dy = rand
+		dy += wobble_amplitude*math.sin(p.catch_timer/wobble_speed)
 	if p.fishing_direction == 1:
 		start_x += player.RADIUS/2
 		dy = -1*player.RADIUS*3
-		dx = rand
+		if p.catch_timer > wait_frames:
+			dx = rand
+		dx += wobble_amplitude*math.sin(p.catch_timer/wobble_speed)
 	if p.fishing_direction == 2:
 		start_y -= player.RADIUS/2
 		dx = -1*player.RADIUS*3
-		dy = rand
+		if p.catch_timer > wait_frames:
+			dy = rand
+		dy += wobble_amplitude*math.sin(p.catch_timer/wobble_speed)
 	if p.fishing_direction == 3:
 		start_x -= player.RADIUS/2
-		dy = player.RADIUS*3
-		dx = rand
+		if p.catch_timer > wait_frames:
+			dx = rand
+		dx += wobble_amplitude*math.sin(p.catch_timer/wobble_speed)
 
 	pygame.draw.line(screen, (0,0,0), \
 					 (start_x, start_y), \
