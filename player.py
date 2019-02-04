@@ -25,6 +25,11 @@ class Player:
 
 		self.fishing_time = False;
 		self.fishing_direction = -1
+		self.fishing = False
+
+		self.catch_timer = 0
+
+		self.inventory = []
 
 	def set_map(self, mapIn):
 		self.map = mapIn
@@ -53,12 +58,16 @@ class Player:
 		self.map_x = self.x/self.map.pixels_per_block()
 		self.map_y = self.y/self.map.pixels_per_block()
 		water_edge = False
+		#if moving at all
 		if self.moving_left\
 			or self.moving_right\
 			or self.moving_down\
 			or self.moving_up:
 			self.fishing_time = False
 			self.fishing_direction = -1
+			# if self.fishing:
+			# 	self.fishing = False
+		#specific directions
 		if self.moving_left:
 			if self.map_x <0:
 				self.x += self.speed
@@ -106,6 +115,12 @@ class Player:
 		if water_edge:
 			self.fishing_time = True
 
+		if not self.fishing_time:
+			self.fishing = False
+
+		if self.fishing:
+			self.catch_timer += 1
+
 	def key_down(self, event):
 		if event.key == pygame.K_w:
 			self.moving_up = True
@@ -115,6 +130,14 @@ class Player:
 			self.moving_down = True
 		if event.key == pygame.K_d:
 			self.moving_right = True
+
+		if event.key == pygame.K_f:
+			if not self.fishing:
+				self.fishing = True
+				self.catch_timer = 0
+			else:
+				self.fishing = False
+				self.catch_timer = 0
 	def key_up(self, event):
 		if event.key == pygame.K_w:
 			self.moving_up = False
@@ -124,28 +147,6 @@ class Player:
 			self.moving_down = False
 		if event.key == pygame.K_d:
 			self.moving_right = False
-
-	def draw_fishing(self, screen, start_pos):
-		start_x = start_pos[0]
-		start_y = start_pos[1]
-		dx = 0
-		dy = 0
-		if self.fishing_direction == 0:
-			start_y += RADIUS/2
-			dx = RADIUS*3
-		if self.fishing_direction == 1:
-			start_x += RADIUS/2
-			dy = -1*RADIUS*3
-		if self.fishing_direction == 2:
-			start_y -= RADIUS/2
-			dx = -1*RADIUS*3
-		if self.fishing_direction == 3:
-			start_x -= RADIUS/2
-			dy = RADIUS*3
-		
-		pygame.draw.line(screen, (0,0,0), \
-						 (start_x, start_y), \
-						 (start_x + dx, start_y +dy), 5)
 
 	def fish(self):
 		pass

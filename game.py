@@ -3,7 +3,10 @@ import pygame
 import spritesheet
 import boat
 import player
+import animations
 import map
+
+pygame.font.init()
 
 display_width = 800
 display_height = 600
@@ -23,7 +26,7 @@ target_y = 500
 map_size = 50
 
 p = player.Player()
-m = map.generate_map(map_size, [1, 1, 1,
+m = map.generate_map(map_size, [0, 1, 1,
 								1, 0, 1,
 								1, 1, 1])
 
@@ -57,14 +60,20 @@ while not done:
 			p.key_down(event)
 		if event.type == pygame.KEYUP:
 			p.key_up(event)
+
+
 	p.update()
 	
 	m.draw(display, (center[0]-p.x,center[1]-p.y))
 	p.draw(display, center)
 
 	# print(p.fishing_time)
-	if p.fishing_time:
-		p.draw_fishing(display, center)
+	if p.fishing_time and not p.fishing:
+		animations.press_f_to_fish(display, center)
+	elif p.fishing:
+		animations.draw_fishing(p, display, center)
+
+
 
 	pygame.display.update()
 	clock.tick(60)
