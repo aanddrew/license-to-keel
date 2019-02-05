@@ -1,7 +1,4 @@
 import pygame
-# import ship
-import spritesheet
-import boat
 import player
 import animations
 import map
@@ -29,30 +26,22 @@ map_size = 50
 i = island.Island(3, 1)
 
 p = player.Player()
-# m = map.generate_map(map_size, [0, 1, 1,
-# 								1, 0, 1,
-# 								1, 1, 1])
-current_island_x = 1
-current_island_y = 1
+current_island_x = i.size/2
+current_island_y = i.size/2
 m = i.maps[current_island_x][current_island_y]
 
 p.set_map(m)
 p.forbidden_blocks = [0]
 
+#put the player in the center of the map
 p.x = map_size*m.pixels_per_block()/2
-# p.x = 0
 p.y = map_size*m.pixels_per_block()/2
-
-# print(p.current_block())
 p.update()
-# print(p.current_block())
+
+#move the player so they don't spawn in water
 while p.current_block() ==0:
 	p.y -= m.pixels_per_block()
 	p.update()
-
-# map.load_map('maps/test.map')
-# map.generate_blocks(20)
-
 
 while not done:
 	display.fill(water_blue)
@@ -79,7 +68,10 @@ while not done:
 	elif p.fishing:
 		animations.draw_fishing(p, display, center)
 
+	#transport player to new map on island
 	if p.transporting:
+		last_x = current_island_x
+		last_y = current_island_y
 		current_island_x += p.next_map[0]
 		current_island_y += p.next_map[1]
 		m = i.maps[current_island_x][current_island_y]
@@ -88,8 +80,43 @@ while not done:
 			p.x = m.width_in_pixels()-p.x
 		elif p.next_map[1] == 1 or p.next_map[1] == -1:
 			p.y = m.width_in_pixels()-p.y
+			if p.next_map[1] == 1:
+				p.y += m.pixels_per_block()
+			if p.next_map[1] == -1:
+				p.y -= m.pixels_per_block()
+
+		# print(current_island_x, current_island_y)
+		# if current_island_y == i.size-1 and p.next_map[1] != 1:
+		# 	while p.current_block() ==0:
+		# 		p.y -= m.pixels_per_block()
+		# 		p.update()
+		# elif current_island_y == 0 and p.next_map[1] != -1:
+		# 	while p.current_block() ==0:
+		# 		p.y += m.pixels_per_block()
+		# 		p.update()
+		# if current_island_x == 0 and p.next_map[0] != -1:
+		# 	while p.current_block() ==0:
+		# 		p.x += m.pixels_per_block()
+		# 		p.update()
+		# elif current_island_x == i.size-1 and p.next_map[0] != 1:
+		# 	while p.current_block() ==0:
+		# 		p.x -= m.pixels_per_block()
+		# 		p.update()
+		while p.x >= m.width_in_pixels():
+			p.x -= m.pixels_per_block()
+			P.update()
+		while p.y >= m.width_in_pixels():
+			p.y -= m.pixels_per_block()
+			p.update()
+		while p.x <= 0:
+			p.x += m.pixels_per_block()
+			p.update()
+		while p.y <= 0:
+			p.y += m.pixels_per_block()
+			p.update()
+
 		p.transporting = False
-		print(current_island_x, current_island_y)
+
 	if p.at_edge:
 		animations.press_space_to_transport(display, center)
 

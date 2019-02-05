@@ -47,7 +47,10 @@ class Player:
 		pygame.draw.circle(screen, (255,120,0), pos, RADIUS, RADIUS)
 
 	def current_block(self):
-		return self.map.blocks[self.map_x][self.map_y]
+		try:
+			return self.map.blocks[self.map_x][self.map_y]
+		except:
+			pass
 	# def next_block(self, ):
 
 	def change_wait_frames(self, new = -1):

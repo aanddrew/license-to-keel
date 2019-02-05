@@ -12,9 +12,11 @@ And each new island the player visits will be a higher "level" than
 the last one. This will in a sense create an infinite game.
 """
 class Island:
-	def __init__(self, size, levelIn):
+	def __init__(self, sizeIn, levelIn):
 		self.maps = []
 		self.level = levelIn
+		self.size = sizeIn
+		size = sizeIn
 		for x in range(0, size):
 			self.maps.append([])
 			for y in range(0, size):
@@ -29,19 +31,19 @@ class Island:
 				#CORNERS
 				if x == 0 and y == 0:
 					lands = [0, 0, 0,
-							 0, 1, 1,
-							 0, 1, 1]
+							 0, 0, 0,
+							 0, 0, 1]
 				elif x == 0 and y == size-1:
-					lands = [0, 0, 0,
-							 1, 1, 0,
-							 1, 1, 0]
-				elif x == size-1 and y == 0:
-					lands = [0, 1, 1,
-							 0, 1, 1,
+					lands = [0, 0, 1,
+							 0, 0, 0,
 							 0, 0, 0]
+				elif x == size-1 and y == 0:
+					lands = [0, 0, 0,
+							 0, 0, 0,
+							 1, 0, 0]
 				elif x == size-1 and y == size-1:
-					lands = [1, 1, 0,
-							 1, 1, 0,
+					lands = [1, 0, 0,
+							 0, 0, 0,
 							 0, 0, 0]
 				#SIDES
 				elif x == 0:
