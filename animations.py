@@ -8,6 +8,8 @@ pygame.font.init()
 game_font = pygame.font.SysFont(pygame.font.get_default_font(), 45)
 text_surface = game_font.render('test', False, (0,0,0))
 
+small_font = pygame.font.SysFont(pygame.font.get_default_font(), 12)
+
 def draw_catch():
 	pass
 
@@ -87,3 +89,33 @@ def draw_fishing(p, screen, start_pos):
 	pygame.draw.line(screen, (0,0,0), \
 					 (start_x, start_y), \
 					 (start_x + dx, start_y +dy), 5)
+
+#Figure out how to implement this
+nice_catch_timer = 0
+def nice_catch(p, screen, center):
+	if nice_catch_timer < 60:
+		text_surface = game_font.render('Nice Catch!'\
+										, False, (0,0,0))
+
+		x = center[0]
+		y = center[1]
+		if p.fishing_direction == 0:
+			x+= p.RADIUS*4
+			y-=text_surface.get_height()/2
+		elif p.fishing_direction == 1:
+			y-= p.RADIUS*4
+			y-= text_surface.get_height()
+			x-= text_surface.get_width()/2
+		elif p.fishing_direction == 2:
+			x-= p.RADIUS*4
+			x-= text_surface.get_width()
+			y-=text_surface.get_height()/2
+		elif p.fishing_direction == 3:
+			y += p.RADIUS*4
+			x-= text_surface.get_width()/2
+
+		screen.blit(text_surface, (x,y))
+
+		nice_catch_timer += 1
+	else:
+		return False

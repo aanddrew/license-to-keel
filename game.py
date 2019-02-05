@@ -44,6 +44,7 @@ while p.current_block() ==0:
 	p.update()
 
 while not done:
+	caught = False
 	display.fill(water_blue)
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -76,6 +77,8 @@ while not done:
 		current_island_y += p.next_map[1]
 		m = i.maps[current_island_x][current_island_y]
 		p.set_map(m)
+
+		#move the player to the opposite side when they transport
 		if p.next_map[0] == 1 or p.next_map[0] == -1:
 			p.x = m.width_in_pixels()-p.x
 		elif p.next_map[1] == 1 or p.next_map[1] == -1:
@@ -85,23 +88,7 @@ while not done:
 			if p.next_map[1] == -1:
 				p.y -= m.pixels_per_block()
 
-		# print(current_island_x, current_island_y)
-		# if current_island_y == i.size-1 and p.next_map[1] != 1:
-		# 	while p.current_block() ==0:
-		# 		p.y -= m.pixels_per_block()
-		# 		p.update()
-		# elif current_island_y == 0 and p.next_map[1] != -1:
-		# 	while p.current_block() ==0:
-		# 		p.y += m.pixels_per_block()
-		# 		p.update()
-		# if current_island_x == 0 and p.next_map[0] != -1:
-		# 	while p.current_block() ==0:
-		# 		p.x += m.pixels_per_block()
-		# 		p.update()
-		# elif current_island_x == i.size-1 and p.next_map[0] != 1:
-		# 	while p.current_block() ==0:
-		# 		p.x -= m.pixels_per_block()
-		# 		p.update()
+		#correct the player's position after they transport
 		while p.x >= m.width_in_pixels():
 			p.x -= m.pixels_per_block()
 			P.update()
@@ -115,12 +102,13 @@ while not done:
 			p.y += m.pixels_per_block()
 			p.update()
 
+		#done transporting
 		p.transporting = False
 
 	if p.at_edge:
 		animations.press_space_to_transport(display, center)
 
-
+	# if p.fishing
 
 	pygame.display.update()
 	clock.tick(60)
