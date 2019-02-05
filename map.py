@@ -2,8 +2,10 @@ import pygame
 import random
 
 class Map:
-	def __init__(self, sizeIn, blocksIn):
+	def __init__(self, sizeIn, blocksIn, levelIn):
 		self.size = sizeIn
+
+		self.level = levelIn
 		
 		self.textures=[]
 		#texutres[0] is sand
@@ -25,7 +27,10 @@ class Map:
 				if self.blocks[c][r] != 0:
 					screen.blit(self.textures[self.blocks[c][r]-1], loc)
 
-def generate_map(size, lands):
+	def width_in_pixels(self):
+		return self.textures[0].get_width()*self.size
+
+def generate_map(size, lands, levelIn):
 	# blocks = []
 	# for i in range(0, size):
 	# 	blocks.append([])
@@ -33,7 +38,7 @@ def generate_map(size, lands):
 	# 		r = random.randint(0,2)
 	# 		blocks[i].append(r)
 	blocks = generate_blocks(size, lands)
-	m = Map(size, blocks)
+	m = Map(size, blocks, levelIn)
 
 	return m
 
@@ -77,6 +82,43 @@ def generate_blocks(size, lands):
 		for i in range(0, middle/2):
 			blocks[end][end-i] = 1
 			blocks[end-i][end] = 1
+	#filling sides
+	if lands[1] == 1:
+		start = size/2
+		end = start+1
+		if lands[0] == 1:
+			start = 0
+		if lands[2] == 1:
+			end = size-1
+		for i in range(start, end):
+			blocks[i][0] = 1
+	if lands[3] == 1:
+		start = size/2
+		end = start+1
+		if lands[0] == 1:
+			start = 0
+		if lands[6] == 1:
+			end = size-1
+		for i in range(start, end):
+			blocks[0][i] = 1
+	if lands[5] == 1:
+		start = size/2
+		end = start+1
+		if lands[2] == 1:
+			start = 0
+		if lands[8] == 1:
+			end = size-1
+		for i in range(start, end):
+			blocks[size-1][i] = 1
+	if lands[7] == 1:
+		start = size/2
+		end = start+1
+		if lands[6] == 1:
+			start = 0
+		if lands[8] == 1:
+			end = size-1
+		for i in range(start, end):
+			blocks[i][size-1] = 1
 
 	#sometimes this loop will get stuck forever....
 	#don't know how to fix it. 

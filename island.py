@@ -12,11 +12,12 @@ And each new island the player visits will be a higher "level" than
 the last one. This will in a sense create an infinite game.
 """
 class Island:
-	def __init__(self, size):
+	def __init__(self, size, levelIn):
 		self.maps = []
-		for y in range(0, size):
+		self.level = levelIn
+		for x in range(0, size):
 			self.maps.append([])
-			for x in range(0, size):
+			for y in range(0, size):
 				left_side = (x==0)
 				top_side = (y==0)
 				right_side = (x==size-1)
@@ -25,28 +26,44 @@ class Island:
 				lands = [1, 1, 1,
 						 1, 1, 1,
 						 1, 1, 1]
-				if not left_side and\
-				   not right_side and\
-				   not top_side and\
-				   not bottom_side:
-				   lands[4]=0
-				if left_side:
-					lands[3] = 0
-					#set bottom or top corners
-					if top_side:
-						lands[0] = 0
-					if bottom_side:
-						lands[6]=0
-				if right_side:
-					lands[5] = 0
-					#set bottom or top corners
-					if top_side:
-						lands[2] = 0
-					if bottom_side:
-						lands[8] = 0
-				if top_side:
-					lands[1] = 0
-				if bottom_side:
-					lands[7] = 0
-				m = map.generate_map(MAP_SIZE, lands)
-				self.maps[y].append(m)
+				#CORNERS
+				if x == 0 and y == 0:
+					lands = [0, 0, 0,
+							 0, 1, 1,
+							 0, 1, 1]
+				elif x == 0 and y == size-1:
+					lands = [0, 0, 0,
+							 1, 1, 0,
+							 1, 1, 0]
+				elif x == size-1 and y == 0:
+					lands = [0, 1, 1,
+							 0, 1, 1,
+							 0, 0, 0]
+				elif x == size-1 and y == size-1:
+					lands = [1, 1, 0,
+							 1, 1, 0,
+							 0, 0, 0]
+				#SIDES
+				elif x == 0:
+					lands = [0, 0, 1,
+							 0, 0, 1,
+							 0, 0, 1]
+				elif x == size-1:
+					lands = [1, 0, 0,
+							 1, 0, 0,
+							 1, 0, 0]
+				elif y == 0:
+					lands = [0, 0, 0,
+							 0, 0, 0,
+							 1, 1, 1]
+				elif y == size-1:
+					lands = [1, 1, 1,
+							 0, 0, 0,
+							 0, 0, 0]
+				#MIDDLE
+				elif y == size/2 and x == size/2:
+					lands = [1, 1, 1,
+							 1, 0, 1,
+							 1, 1, 1]
+				m = map.generate_map(MAP_SIZE, lands, levelIn)
+				self.maps[x].append(m)

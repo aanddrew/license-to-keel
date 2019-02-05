@@ -26,13 +26,15 @@ target_y = 500
 
 map_size = 50
 
-i = island.Island(3)
+i = island.Island(3, 1)
 
 p = player.Player()
 # m = map.generate_map(map_size, [0, 1, 1,
 # 								1, 0, 1,
 # 								1, 1, 1])
-m = i.maps[0][0]
+current_island_x = 1
+current_island_y = 1
+m = i.maps[current_island_x][current_island_y]
 
 p.set_map(m)
 p.forbidden_blocks = [0]
@@ -76,6 +78,20 @@ while not done:
 		animations.press_f_to_fish(display, center)
 	elif p.fishing:
 		animations.draw_fishing(p, display, center)
+
+	if p.transporting:
+		current_island_x += p.next_map[0]
+		current_island_y += p.next_map[1]
+		m = i.maps[current_island_x][current_island_y]
+		p.set_map(m)
+		if p.next_map[0] == 1 or p.next_map[0] == -1:
+			p.x = m.width_in_pixels()-p.x
+		elif p.next_map[1] == 1 or p.next_map[1] == -1:
+			p.y = m.width_in_pixels()-p.y
+		p.transporting = False
+		print(current_island_x, current_island_y)
+	if p.at_edge:
+		animations.press_space_to_transport(display, center)
 
 
 
