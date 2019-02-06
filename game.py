@@ -166,6 +166,12 @@ while not done:
 	elif p.fishing:
 		animations.draw_fishing(p, display, center)
 
+	if p.caught_fish:
+		animations.start_nice_catch()
+		p.caught_fish = False
+	if animations.nice_catch_timer > 0:
+		animations.nice_catch(p,display,center)
+
 	#transport player to new map on island
 	if p.transporting:
 		transport_player()
@@ -173,7 +179,7 @@ while not done:
 	if p.at_edge:
 		animations.press_space_to_transport(display, center)
 
-	# if p.fishing
+	animations.draw_score_board(p, display)
 
 	pygame.display.update()
 	clock.tick(60)

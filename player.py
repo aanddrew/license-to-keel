@@ -27,6 +27,7 @@ class Player:
 		self.fishing_time = False;
 		self.fishing_direction = -1
 		self.fishing = False
+		self.caught_fish = False
 
 		self.catch_timer = 0
 		self.wait_frames = 0
@@ -39,6 +40,8 @@ class Player:
 		self.next_map=(0,0)
 
 		self.inventory = []
+
+		self.num_fish = 0
 
 	def set_map(self, mapIn):
 		self.map = mapIn
@@ -184,9 +187,12 @@ class Player:
 			else:
 				#if the player has caught the fish
 				if self.catch_timer > self.wait_frames:
-					print("You caught the fish!")
+					# print("You caught the fish!")
+					self.caught_fish = True
+					self.num_fish += 1
 				else:
-					print("You suck lol")
+					pass
+					# print("You suck lol")
 				self.fishing = False
 				self.catch_timer = 0
 		if event.key == pygame.K_SPACE:

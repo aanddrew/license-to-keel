@@ -92,30 +92,50 @@ def draw_fishing(p, screen, start_pos):
 
 #Figure out how to implement this
 nice_catch_timer = 0
+
+def start_nice_catch():
+	global nice_catch_timer
+	nice_catch_timer = 60
+
+nice_catch_x = 0
+nice_catch_y = 0
+
 def nice_catch(p, screen, center):
-	if nice_catch_timer < 60:
+	global nice_catch_timer
+	if nice_catch_timer > 0:
 		text_surface = game_font.render('Nice Catch!'\
 										, False, (0,0,0))
+		text_surface.set_alpha((nice_catch_timer*(255/60)))
 
 		x = center[0]
 		y = center[1]
 		if p.fishing_direction == 0:
-			x+= p.RADIUS*4
+			x+= player.RADIUS*4
 			y-=text_surface.get_height()/2
 		elif p.fishing_direction == 1:
-			y-= p.RADIUS*4
+			y-= player.RADIUS*4
 			y-= text_surface.get_height()
 			x-= text_surface.get_width()/2
 		elif p.fishing_direction == 2:
-			x-= p.RADIUS*4
+			x-= player.RADIUS*4
 			x-= text_surface.get_width()
 			y-=text_surface.get_height()/2
 		elif p.fishing_direction == 3:
-			y += p.RADIUS*4
+			y += player.RADIUS*4
 			x-= text_surface.get_width()/2
 
 		screen.blit(text_surface, (x,y))
-
-		nice_catch_timer += 1
+		nice_catch_timer -= 1
 	else:
 		return False
+
+def draw_score_board(p, screen):
+	text_surface = game_font.render('Fish: {}'.format(p.num_fish)\
+									, False, (0,0,0))
+
+	back_rect = pygame.rect.Rect(0,0, \
+								 text_surface.get_width()+20,\
+								 text_surface.get_height()+20)
+
+	screen.fill((200,200,200), back_rect)
+	screen.blit(text_surface, (10,10))
