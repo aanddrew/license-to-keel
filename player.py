@@ -59,6 +59,10 @@ class Player:
 		else:
 			self.wait_frames = new
 
+	def update_loc(self):
+		self.map_x = self.x/self.map.pixels_per_block()
+		self.map_y = self.y/self.map.pixels_per_block()
+
 	#need to revamp the movement.
 	#I have an idea with next_block to simplify this
 	def update(self):
@@ -73,8 +77,7 @@ class Player:
 
 		#the class does not allow movement outside of the map
 		#removing this will cause out of bounds errors
-		self.map_x = self.x/self.map.pixels_per_block()
-		self.map_y = self.y/self.map.pixels_per_block()
+		self.update_loc()
 		water_edge = False
 		#if moving at all
 		if self.moving_left\

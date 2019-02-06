@@ -43,6 +43,103 @@ while p.current_block() ==0:
 	p.y -= m.pixels_per_block()
 	p.update()
 
+#moving the player between islands. tough task actually
+def transport_player():
+	global current_island_x
+	global current_island_y
+	global m
+	current_island_x += p.next_map[0]
+	current_island_y += p.next_map[1]
+	m = i.maps[current_island_x][current_island_y]
+	p.set_map(m)
+
+	#move the player to the opposite side when they transport
+	if p.next_map[0] == 1 or p.next_map[0] == -1:
+		p.x = m.width_in_pixels()-p.x
+	elif p.next_map[1] == 1 or p.next_map[1] == -1:
+		p.y = m.width_in_pixels()-p.y
+		if p.next_map[1] == 1:
+			p.y += m.pixels_per_block()
+		if p.next_map[1] == -1:
+			p.y -= m.pixels_per_block()
+	p.update_loc()
+
+	if current_island_y == 0 and current_island_x == 0:
+		while (p.current_block() == 0):
+			if (p.y < m.width_in_pixels() - m.pixels_per_block()):
+				p.y += 1
+				p.update_loc()
+			if (p.x < m.width_in_pixels() - m.pixels_per_block()):
+				p.x += 1
+				p.update_loc()
+	elif current_island_y == 0 and current_island_x == i.size-1:
+		while (p.current_block() == 0):
+			if (p.y < m.width_in_pixels() - m.pixels_per_block()):
+				p.y += 1
+				p.update_loc()
+			if (p.x > 0):
+				p.x -= 1
+				p.update_loc()
+	elif current_island_y == i.size-1 and current_island_x == i.size-1:
+		while (p.current_block() == 0):
+			if (p.y > 0):
+				p.y -= 1
+				p.update_loc()
+			if (p.x > 0):
+				p.x -= 1
+				p.update_loc()
+	elif current_island_y == i.size-1 and current_island_x == 0:
+		while (p.current_block() == 0):
+			if (p.y > 0):
+				p.y -= 1
+				p.update_loc()
+			if (p.x < m.width_in_pixels() - m.pixels_per_block()):
+				p.x += 1
+				p.update_loc()
+	elif current_island_x == 0:
+		while (p.current_block() == 0):
+			if (p.x < m.width_in_pixels() - m.pixels_per_block()):
+				p.x += 1
+				p.update_loc()
+	elif current_island_x == i.size-1:
+		while (p.current_block() == 0):
+			if (p.x > 0):
+				p.x -= 1
+				p.update_loc()
+	elif current_island_y == 0:
+		while (p.current_block() == 0):
+			if (p.y < m.width_in_pixels() - m.pixels_per_block()):
+				p.y += 1
+				p.update_loc()
+	elif current_island_y == i.size-1:
+		while (p.current_block() == 0):
+			if (p.y > 0):
+				p.y -= 1
+				p.update_loc()
+
+	#correct the player's position after they transport
+	while p.x >= m.width_in_pixels():
+		p.x -= m.pixels_per_block()
+		p.update()
+	while p.y >= m.width_in_pixels():
+		p.y -= m.pixels_per_block()
+		p.update()
+	while p.x <= 0:
+		p.x += m.pixels_per_block()
+		p.update()
+	while p.y <= 0:
+		p.y += m.pixels_per_block()
+		p.update()
+
+	#fix a bug that allows players to transport more than once
+	p.next_map=(0,0)
+	p.at_edge = False
+	#done transporting
+	p.transporting = False
+
+"""
+	GAME LOOOOOOOOP
+"""
 while not done:
 	caught = False
 	display.fill(water_blue)
@@ -71,39 +168,7 @@ while not done:
 
 	#transport player to new map on island
 	if p.transporting:
-		last_x = current_island_x
-		last_y = current_island_y
-		current_island_x += p.next_map[0]
-		current_island_y += p.next_map[1]
-		m = i.maps[current_island_x][current_island_y]
-		p.set_map(m)
-
-		#move the player to the opposite side when they transport
-		if p.next_map[0] == 1 or p.next_map[0] == -1:
-			p.x = m.width_in_pixels()-p.x
-		elif p.next_map[1] == 1 or p.next_map[1] == -1:
-			p.y = m.width_in_pixels()-p.y
-			if p.next_map[1] == 1:
-				p.y += m.pixels_per_block()
-			if p.next_map[1] == -1:
-				p.y -= m.pixels_per_block()
-
-		#correct the player's position after they transport
-		while p.x >= m.width_in_pixels():
-			p.x -= m.pixels_per_block()
-			P.update()
-		while p.y >= m.width_in_pixels():
-			p.y -= m.pixels_per_block()
-			p.update()
-		while p.x <= 0:
-			p.x += m.pixels_per_block()
-			p.update()
-		while p.y <= 0:
-			p.y += m.pixels_per_block()
-			p.update()
-
-		#done transporting
-		p.transporting = False
+		transport_player()
 
 	if p.at_edge:
 		animations.press_space_to_transport(display, center)
